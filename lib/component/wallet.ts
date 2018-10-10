@@ -1,7 +1,7 @@
 import { ECPair } from "bitcoinjs-lib";
+import { SaveData } from "../misc/wallethelper";
 
 type OwnAddressState = "false" | "pubkey" | "privatekey";
-type SaveData = { public: any, private: any };
 
 export default interface Wallet {
     available(): boolean;
@@ -11,4 +11,5 @@ export default interface Wallet {
     getPair(address: string): ECPair;
     addAddress(pair: ECPair): void;
     listAddresses(): string[];
+    getClassId(): string;
 }

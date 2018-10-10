@@ -13,11 +13,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/argparse": "^1.0.35",
+    "@types/bitcoinjs-lib": "^3.4.0",
+    "@types/node": "^10.11.6",
     "typescript": "^3.1.1"
   },
   "dependencies": {
-    "@types/argparse": "^1.0.35",
-    "@types/bitcoinjs-lib": "^3.4.0",
     "argparse": "^1.0.10",
     "axios": "^0.18.0",
     "bitcoinjs-lib": "^3.3.2"
