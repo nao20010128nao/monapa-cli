@@ -1,0 +1,25 @@
+{
+  "name": "monapa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "tsc || echo WTF!?",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": "./dist/index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^3.1.1"
+  },
+  "dependencies": {
+    "@types/argparse": "^1.0.35",
+    "@types/bitcoinjs-lib": "^3.4.0",
+    "argparse": "^1.0.10",
+    "axios": "^0.18.0",
+    "bitcoinjs-lib": "^3.3.2"
+  }
+}
