@@ -23,8 +23,13 @@ class Config {
     setWallet(wallet: Wallet): void {
         this.wallet = wallet;
     }
-    getWallet(): Wallet | null {
-        return this.wallet;
+    getWallet(): Wallet {
+        const localWallet = this.wallet;
+        if (localWallet) {
+            return localWallet;
+        } else {
+            throw new Error("Create wallet first. ?");
+        }
     }
     load(): void {
         if (!fs.existsSync(this.configPath())) {

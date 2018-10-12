@@ -67,7 +67,11 @@ export default class PrivKeyWallet implements Wallet {
             } catch (e) {
                 try {
                     pair = ECPair.fromPublicKeyBuffer(Buffer.from(result, "base64"), monacoin);
-                } catch (e) { }
+                } catch (e) {
+                    try {
+                        pair = ECPair.fromPublicKeyBuffer(Buffer.from(result, "hex"), monacoin);
+                    } catch (e) { }
+                }
             }
             if (pair) {
                 console.log(`Added ${pair.getAddress()}`);
@@ -82,7 +86,7 @@ export default class PrivKeyWallet implements Wallet {
             }
         } else {
             while (true) {
-                const result = question("Type public key (Base64 or hex, no wrap). Leave blank to finish\n", {});
+                const result = question("Type private key (WIF) or public key (Base64 or hex, no wrap). Leave blank to finish\n", {});
                 if (!result) {
                     break;
                 }

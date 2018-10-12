@@ -1,71 +1,35 @@
-import { Client } from "counterparty-promise";
+import axios from "axios";
 
-const client = new Client({
-    host: 'https://counterparty.api.monaparty.me/',
-    port: 443,
-    user: 'rpc',
-    pass: 'rpc',
-    timeout: 30000,
-    ssl: true,
-    sslStrict: true,
-});
+const endpoints = [
+    'https://wallet.monaparty.me/_api'
+];
 
-type PromisedFunction<P, T> = (prop: P) => Promise<T>
-type AnyAnyFunction = PromisedFunction<any, any>
-
-type ClientType = {
-    cmd: (call: string, prop: any) => Promise<any>
-
-    getAssets: AnyAnyFunction,
-    getBalances: AnyAnyFunction,
-    getBets: AnyAnyFunction,
-    getBetExpirations: AnyAnyFunction,
-    getBetMatches: AnyAnyFunction,
-    getBetMatchExpirations: AnyAnyFunction,
-    getBetMatchResolutions: AnyAnyFunction,
-    getBroadcasts: AnyAnyFunction,
-    getBtcpays: AnyAnyFunction,
-    getBurns: AnyAnyFunction,
-    getCancels: AnyAnyFunction,
-    getCredits: AnyAnyFunction,
-    getDebits: AnyAnyFunction,
-    getDividends: AnyAnyFunction,
-    getIssuances: AnyAnyFunction,
-    getMempool: AnyAnyFunction,
-    getOrders: AnyAnyFunction,
-    getOrderExpirations: AnyAnyFunction,
-    getOrderMatches: AnyAnyFunction,
-    getOrderMatchExpirations: AnyAnyFunction,
-    getSends: AnyAnyFunction,
-
-    getAssetInfo: AnyAnyFunction,
-    getSupply: AnyAnyFunction,
-    getAssetNames: AnyAnyFunction,
-    getHolderCount: AnyAnyFunction,
-    getHolders: AnyAnyFunction,
-    getMessages: AnyAnyFunction,
-    getMessagesByIndex: AnyAnyFunction,
-    getBlockInfo: AnyAnyFunction,
-    getBlocks: AnyAnyFunction,
-    getRunningInfo: AnyAnyFunction,
-    getElementCounts: AnyAnyFunction,
-    getUnspentTxouts: AnyAnyFunction,
-    getRawtransaction: AnyAnyFunction,
-    getRawtransactionBatch: AnyAnyFunction,
-    searchRawTransactions: AnyAnyFunction,
-    getTxInfo: AnyAnyFunction,
-    searchPubkey: AnyAnyFunction,
-    unpack: AnyAnyFunction,
-
-    createBet: AnyAnyFunction,
-    createBroadcast: AnyAnyFunction,
-    createBtcpay: AnyAnyFunction,
-    createBurn: AnyAnyFunction,
-    createCancel: AnyAnyFunction,
-    createDividend: AnyAnyFunction,
-    createIssuance: AnyAnyFunction,
-    createOrder: AnyAnyFunction,
-    createSend: AnyAnyFunction,
+export default {
+    cmd: async (method: string, params: any) => {
+        const r = await axios.post(endpoints[Math.floor(Math.random() * endpoints.length)], {
+            params,
+            id: 0,
+            jsonrpc: "2.0",
+            method
+        });
+        if (r.data.error && r.data.error.code) {
+            throw r.data.error.data;
+        }
+        return r.data.result;
+    },
+    cmdLib: async (method: string, params: any) => {
+        const r = await axios.post(endpoints[Math.floor(Math.random() * endpoints.length)], {
+            params: {
+                method,
+                params
+            },
+            id: 0,
+            jsonrpc: "2.0",
+            method: "proxy_to_counterpartyd"
+        });
+        if (r.data.error && r.data.error.code) {
+            throw r.data.error.data;
+        }
+        return r.data.result;
+    }
 };
-
-export default client as ClientType;
