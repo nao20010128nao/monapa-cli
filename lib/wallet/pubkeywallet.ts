@@ -67,7 +67,7 @@ export default class PubKeyWallet implements Wallet {
             }
         } else {
             while (true) {
-                const result = question("Type public key (Base64 or hex, no wrap). Leave blank to finish", {});
+                const result = question("Type public key (Base64 or hex, no wrap). Leave blank to finish\n", {});
                 if (!result) {
                     break;
                 }

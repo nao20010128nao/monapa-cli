@@ -1,6 +1,7 @@
 import Wallet from "../component/wallet";
 import PubKeyWallet from "../wallet/pubkeywallet";
 import PrivKeyWallet from "../wallet/privkeywallet";
+import Config from "../config";
 
 export const types: any = {
     pubkey: PubKeyWallet,
@@ -14,7 +15,7 @@ export type ExportedWallet = {
 };
 export type OwnAddressState = "false" | "pubkey" | "privatekey";
 
-function deserializeWallet(data: ExportedWallet | null): Wallet | null {
+export function deserializeWallet(data: ExportedWallet | null): Wallet | null {
     if (!data) {
         return null;
     }
@@ -28,7 +29,7 @@ function deserializeWallet(data: ExportedWallet | null): Wallet | null {
     }
 }
 
-function serializeWallet(wallet: Wallet | null): ExportedWallet | null {
+export function serializeWallet(wallet: Wallet | null): ExportedWallet | null {
     if (!wallet) {
         return null;
     }
@@ -38,4 +39,8 @@ function serializeWallet(wallet: Wallet | null): ExportedWallet | null {
     };
 }
 
-export default { deserializeWallet, serializeWallet };
+export function checkWalletExist(): never | void {
+    if (!Config.getWallet()) {
+        throw new Error("Create wallet first.");
+    }
+}

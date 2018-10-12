@@ -2,7 +2,7 @@ import path from "path";
 import process from "process";
 import Wallet from "./component/wallet";
 import fs from "fs";
-import walletHelper from "./misc/wallethelper";
+import { deserializeWallet, serializeWallet } from "./misc/wallethelper";
 
 class Config {
     private wallet: Wallet | null = null;
@@ -32,14 +32,14 @@ class Config {
         }
         const data = fs.readFileSync(this.configPath(), { encoding: "utf8" });
         const { wallet } = JSON.parse(data);
-        this.wallet = walletHelper.deserializeWallet(wallet);
+        this.wallet = deserializeWallet(wallet);
     }
     save(): void {
         if (!fs.existsSync(this.profilePath())) {
             fs.mkdirSync(this.profilePath());
         }
         const data = {
-            wallet: walletHelper.serializeWallet(this.wallet)
+            wallet: serializeWallet(this.wallet)
         };
         fs.writeFileSync(this.configPath(), JSON.stringify(data));
     }

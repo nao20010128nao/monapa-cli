@@ -48,6 +48,10 @@ export default class MakeWalletCommand implements Command {
             const typeNum = keyInSelect(walletIds, `Select wallet type`);
             type = WalletTypes[walletIds[typeNum]];
         }
+        if (!type) {
+            console.log("Cancelled.");
+            return;
+        }
         const walletObj = new type() as Wallet;
         const toPass = parsed.args && parsed.args.length != 0 ? args : null;
         walletObj.initDialogue(toPass);
