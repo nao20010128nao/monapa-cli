@@ -3,7 +3,7 @@ import commands from "./commands/all";
 import Config from "./config";
 
 Config.load();
-process.on("beforeExit", () => {
+process.on("exit", () => {
     Config.save();
 });
 
