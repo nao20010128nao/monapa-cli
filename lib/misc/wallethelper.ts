@@ -2,7 +2,7 @@ import Wallet from "../component/wallet";
 import PubKeyWallet from "../wallet/pubkeywallet";
 import PrivKeyWallet from "../wallet/privkeywallet";
 
-const types = {
+export const types: any = {
     pubkey: PubKeyWallet,
     privkey: PrivKeyWallet
 };
@@ -12,8 +12,9 @@ export type ExportedWallet = {
     type: string,
     data: SaveData
 };
+export type OwnAddressState = "false" | "pubkey" | "privatekey";
 
-function deserializeWallet(data: any): Wallet {
+function deserializeWallet(data: ExportedWallet | null): Wallet | null {
     if (!data) {
         return null;
     }
@@ -27,7 +28,7 @@ function deserializeWallet(data: any): Wallet {
     }
 }
 
-function serializeWallet(wallet: Wallet): ExportedWallet {
+function serializeWallet(wallet: Wallet | null): ExportedWallet | null {
     if (!wallet) {
         return null;
     }

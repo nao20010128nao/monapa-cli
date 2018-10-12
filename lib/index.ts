@@ -1,5 +1,11 @@
-import { argv } from "process";
+import process, { argv } from "process";
 import commands from "./commands/all";
+import Config from "./config";
+
+Config.load();
+process.on("beforeExit", () => {
+    Config.save();
+});
 
 const commandName = argv[2];
 const realArgs = argv.slice(3);

@@ -5,7 +5,7 @@ import fs from "fs";
 import walletHelper from "./misc/wallethelper";
 
 class Config {
-    private wallet: Wallet;
+    private wallet: Wallet | null = null;
     profilePath(): string {
         let basePath = "";
         if (process.env.APPDATA) {
@@ -23,7 +23,7 @@ class Config {
     setWallet(wallet: Wallet): void {
         this.wallet = wallet;
     }
-    getWallet(): Wallet {
+    getWallet(): Wallet | null {
         return this.wallet;
     }
     load(): void {

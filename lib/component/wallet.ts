@@ -1,7 +1,5 @@
 import { ECPair } from "bitcoinjs-lib";
-import { SaveData } from "../misc/wallethelper";
-
-type OwnAddressState = "false" | "pubkey" | "privatekey";
+import { SaveData, OwnAddressState } from "../misc/wallethelper";
 
 export default interface Wallet {
     available(): boolean;
@@ -12,4 +10,12 @@ export default interface Wallet {
     addAddress(pair: ECPair): void;
     listAddresses(): string[];
     getClassId(): string;
+    initDialogue(data: string[] | undefined | null): void;
+}
+
+export interface PasswordWallet {
+    // save entropy to memory and encrypt when serialize
+    encrypt(password: string): void;
+    // decrypt private and call load() with public data
+    decrypt(password: string): void;
 }

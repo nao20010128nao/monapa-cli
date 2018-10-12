@@ -1,5 +1,6 @@
 import Command from "../component/command";
 import commands from "../commands/all";
+import { toBoolean } from "../misc/conv";
 import { ArgumentParser } from "argparse";
 
 const argParser = new ArgumentParser({
@@ -9,7 +10,7 @@ const argParser = new ArgumentParser({
 argParser.addArgument("--version", {
     defaultValue: true,
     required: false,
-    type: (a: string) => a == "true"
+    type: toBoolean
 });
 
 export default class HelpCommand implements Command {
