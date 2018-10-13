@@ -2,7 +2,7 @@ import Wallet, { PasswordWallet } from "../component/wallet";
 import { SaveData, OwnAddressState, types as walletTypes } from "../misc/wallethelper";
 import { sha256Concat, sha256, aesDecrypt, aesEncrypt } from "../misc/easycrypto";
 import { ECPair } from "bitcoinjs-lib";
-import { questionNewPassword } from "readline-sync";
+import { questionNewPassword, question } from "readline-sync";
 
 export default class EncryptedWallet implements Wallet, PasswordWallet {
     private myWalletData: SaveData | null = null;
@@ -39,6 +39,10 @@ export default class EncryptedWallet implements Wallet, PasswordWallet {
         return "encrypted";
     }
     initDialogue(data: string[]): void {
+        if (data.length >= 1 && data[0]) {
+            this.encrypt(data[0]);
+            return;
+        }
         while (true) {
             const pass = questionNewPassword("Type new password (Cannot be empty): ");
             if (!pass) {
@@ -61,7 +65,7 @@ export default class EncryptedWallet implements Wallet, PasswordWallet {
         let tmp = Buffer.from(password, "utf8");
         for (let i = 0; i < 10; i++)
             tmp = sha256Concat(["\0\0", password, tmp]);
-        return sha256(tmp);
+        return sha256(tmp).slice(0, 16);
     }
 
     encrypt(password: string): void {
@@ -72,14 +76,17 @@ export default class EncryptedWallet implements Wallet, PasswordWallet {
         const { public: publicData, type } = this.myWalletData!.public;
         const encryptedPrivate = Buffer.from(this.myWalletData!.private, "base64");
         const key = this.key = this.makeKey(password);
-        const iv = this.key = this.makeIv(password);
+        const iv = this.iv = this.makeIv(password);
         const decryptedPrivate = JSON.parse(aesDecrypt(key, iv, encryptedPrivate).toString('utf8'));
         this.childWallet = new (walletTypes[type])();
         this.childWallet!.load({ public: publicData, private: decryptedPrivate });
     }
     decryptPrompted(): void {
         while (true) {
-            const pw = questionNewPassword("Type password to decrypt: ", { mask: "*" })
+            const pw = question("Type password to decrypt: ", {
+                hideEchoBack: true,
+                mask: "*"
+            })
             try {
                 this.decrypt(pw);
                 break;

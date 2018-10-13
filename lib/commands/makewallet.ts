@@ -4,6 +4,7 @@ import { types as WalletTypes } from "../misc/wallethelper";
 import { keyInYN, keyInSelect } from "readline-sync";
 import Wallet from "../component/wallet";
 import Config from "../config";
+import EncryptedWallet from "../wallet/encryptedwallet";
 
 const walletIds = Object.keys(WalletTypes).filter(x => x !== "encrypted");
 const argParser = new ArgumentParser({
@@ -25,6 +26,10 @@ argParser.addArgument("--args", {
     defaultValue: null,
     required: false,
     nargs: "*"
+});
+argParser.addArgument("--password", {
+    defaultValue: null,
+    required: false
 });
 
 export default class MakeWalletCommand implements Command {
@@ -54,9 +59,18 @@ export default class MakeWalletCommand implements Command {
             return;
         }
         const walletObj = new type() as Wallet;
-        const toPass = parsed.args && parsed.args.length != 0 ? args : null;
+        const toPass = parsed.args && parsed.args.length != 0 ? args.map(a => a.replace(/^--args=/, "")).filter(a => !!a) : null;
+        console.log(toPass);
         walletObj.initDialogue(toPass);
-        Config.setWallet(walletObj);
+        const encSel = parsed.password || keyInYN("You should encrypt the wallet. Encrypt now?");
+        if (encSel) {
+            const encryptedWallet = new EncryptedWallet();
+            encryptedWallet.setChildWallet(walletObj);
+            encryptedWallet.initDialogue([parsed.password]);
+            Config.setWallet(encryptedWallet);
+        } else {
+            Config.setWallet(walletObj);
+        }
     }
     description(): string {
         return "Creates a wallet";

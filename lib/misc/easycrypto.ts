@@ -20,7 +20,7 @@ export function sha256Concat(message: DataLike[]): Buffer {
 
 export function encryptNow(algo: string, key: Buffer, iv: Buffer, message: Buffer): Buffer {
     const ctx = createCipheriv(algo, key, iv);
-    let data = ctx.update(message, "hex");
+    let data = ctx.update(message, "binary", "hex");
     data += ctx.final("hex");
     return Buffer.from(data, "hex");
 }

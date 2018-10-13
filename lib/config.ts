@@ -24,12 +24,7 @@ class Config {
         this.wallet = wallet;
     }
     getWallet(): Wallet {
-        const localWallet = this.wallet;
-        if (localWallet) {
-            return localWallet;
-        } else {
-            throw new Error("Create wallet first. ?");
-        }
+        return this.wallet!;
     }
     load(): void {
         if (!fs.existsSync(this.configPath())) {
