@@ -2,11 +2,14 @@ import Command from "../component/command";
 import Config from "../config";
 import { checkWalletExist } from "../misc/wallethelper";
 import api from "../cp-client";
-import { toBigNumber, toInteger } from "../misc/conv";
+import { toBigNumber, toInteger, toBoolean } from "../misc/conv";
 import { ArgumentParser } from "argparse";
-import { TokenEntry } from "../misc/extratypes";
+import { TokenEntry, TypedObject } from "../misc/extratypes";
 import BigNumber from "bignumber.js";
-import { keyInYN } from "readline-sync";
+import { keyInYN, keyInSelect } from "readline-sync";
+import { TransactionBuilder, Transaction } from "bitcoinjs-lib";
+import monacoin from "../misc/network";
+import commands from "./all";
 
 const argParser = new ArgumentParser({
     description: "Send",
@@ -32,11 +35,18 @@ argParser.addArgument("--from", {
 argParser.addArgument("--feerate", {
     required: false,
     type: toInteger,
-    defaultValue: 10, // 10 wat/bytes
-    help: "Fee rate"
+    defaultValue: 1000, // 10 wat/kb
+    help: "Fee rate (wat/kb)"
 });
 argParser.addArgument("--memo", {
-    required: false
+    required: false,
+    help: "Memo to attach with"
+});
+argParser.addArgument("--memo-is-hex", {
+    defaultValue: false,
+    required: false,
+    type: toBoolean,
+    help: "Memo is represented in Hex"
 });
 
 export default class SendCommand implements Command {
@@ -60,6 +70,9 @@ export default class SendCommand implements Command {
             }
             return 1;
         }
+        const internalName = tokens[0].asset;
+        // it'll be 100000000 if divisible, 1 if not
+        const fixFactor = new BigNumber(tokens[0].quantity).div(tokens[0].normalized_quantity);
         const total = tokens.map(a => new BigNumber(a.normalized_quantity)).reduce((a, b) => a.plus(b));
         if (total.lt(parsed.amount)) {
             console.log(`You don't have enough token to send! (Sending ${parsed.amount} but only ${total})`);
@@ -95,6 +108,70 @@ export default class SendCommand implements Command {
         if (!keyInYN("OK?")) {
             console.log("Cancelled");
             return 0;
+        }
+        let signed: TypedObject<Buffer> = {};
+        let unsigned: TypedObject<Buffer> = {};
+        for (let { address, amount } of planned) {
+            const memoAdditional = parsed.memo ? {
+                memo: parsed.memo,
+                memo_is_hex: parsed.memo_is_hex
+            } : {};
+            const params = Object.assign({
+                source: address,
+                destination: parsed.dest,
+                asset: internalName,
+                quantity: fixFactor.times(amount).toNumber(),
+                use_enhanced_send: true,
+                fee_per_kb: parsed.feerate
+            }, memoAdditional);
+            let unsignedTx: string = "";
+            try {
+                unsignedTx = await api.cmdLib("create_send", params);
+            } catch (error) {
+                if (typeof error == "object" && error.type == "Exception") {
+                    const err = JSON.parse(error.message);
+                    console.log(`${address}: ${err.code} ${err.message}`);
+                }
+                continue;
+            }
+            const utb = Buffer.from(unsignedTx, "hex");
+            if (wallet.ownAddress(address) != "privatekey") {
+                unsigned[address] = utb;
+            } else {
+                const kp = wallet.getPair(address);
+                const txb = TransactionBuilder.fromTransaction(Transaction.fromBuffer(utb), monacoin);
+                for (let i = 0; i < txb.inputs.length; i++)
+                    txb.sign(i, kp);
+                const txData = txb.build().toBuffer();
+                signed[address] = txData;
+            }
+        }
+        let transactionsAsked: boolean = false;
+        if (Object.keys(signed).length != 0) {
+            transactionsAsked = true;
+            switch (keyInSelect(["Broadcast now", "Display rawtx"], `There is ${Object.keys(signed).length} signed transactions.`)) {
+                case 1:
+                    // broadcast
+                    // avoid errors for Object.values, because it doesn't exist on @types/node
+                    await commands.sendtx.execute(eval('Object.values')(signed));
+                    break;
+                case 2:
+                    // display
+                    for (let address in unsigned) {
+                        console.log(`${address}: ${unsigned[address].toString('hex')}`);
+                    }
+                    break;
+            }
+        }
+        if (Object.keys(unsigned).length != 0) {
+            transactionsAsked = true;
+            console.log(`There is ${Object.keys(unsigned).length} unsigned transactions. Please sign them to broadcast.`);
+            for (let address in unsigned) {
+                console.log(`${address}: ${unsigned[address].toString('hex')}`);
+            }
+        }
+        if (!transactionsAsked) {
+            console.log("No transactions to broadcast!");
         }
     }
     description(): string {

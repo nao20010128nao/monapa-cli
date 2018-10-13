@@ -7,8 +7,10 @@ export type TokenEntry = {
     owner: boolean
 };
 
-export interface TokenAddrMap {
-    [key: string]: TokenEntry[];
+export interface TypedObject<V> {
+    [key: string]: V;
 }
+
+export type TokenAddrMap = TypedObject<TokenEntry[]>
 
 export type PromiseOrNot<T> = T | Promise<T>;
