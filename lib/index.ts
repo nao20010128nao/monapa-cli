@@ -14,7 +14,10 @@ const command = commands[commandName];
 
 (async () => {
     if (command) {
-        await command.execute(realArgs);
+        const result = await command.execute(realArgs);
+        if (typeof result == "number") {
+            process.exit(result);
+        }
     } else {
         if (commandName) {
             console.log(`Command "${commandName}" not found.`)
@@ -25,4 +28,4 @@ const command = commands[commandName];
         console.log("Where [COMMAND] is one of:");
         commands.help.execute(["--version=false"]);
     }
-})().then(a => a, console.error);
+})().then(a => a, a => { console.error(a); process.exit(1) });

@@ -2,23 +2,24 @@ import Command from "../component/command";
 import Config from "../config";
 import { checkWalletExist } from "../misc/wallethelper";
 import api from "../cp-client";
+import { TokenEntry, TokenAddrMap } from "../misc/extratypes";
+import { ArgumentParser } from "argparse";
+import { toBoolean } from "../misc/conv";
 
-type TokenEntry = {
-    address: string,
-    asset: string,
-    asset_longname: string | null,
-    normalized_quantity: number,
-    quantity: number,
-    owner: boolean
-};
-
-interface TokenAddrMap {
-    [key: string]: TokenEntry[];
-}
+const argParser = new ArgumentParser({
+    description: "Get balance",
+    addHelp: false
+});
+argParser.addArgument("--satoshis", {
+    required: false,
+    type: toBoolean,
+    defaultValue: false
+});
 
 export default class GetBalanceCommand implements Command {
     async execute(args: string[]): Promise<any> {
         checkWalletExist();
+        const parsed = argParser.parseArgs(args);
         const addrs = Config.getWallet().listAddresses();
         const tokens: TokenAddrMap = {};
         for (let addr of addrs) {
@@ -43,7 +44,8 @@ export default class GetBalanceCommand implements Command {
             });
             for (let entry of found) {
                 const name = entry.asset_longname || entry.asset;
-                console.log(`  ${name}: ${entry.normalized_quantity} ${entry.asset_longname ? entry.asset : ""} ${entry.owner ? "Owner" : ""}`);
+                const amountDisplay = parsed.satoshis ? entry.quantity : entry.normalized_quantity;
+                console.log(`  ${name}: ${amountDisplay} ${entry.asset_longname ? entry.asset : ""} ${entry.owner ? "Owner" : ""}`);
             }
         }
     }
