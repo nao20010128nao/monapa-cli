@@ -41,12 +41,16 @@ export function serializeWallet(wallet: Wallet | null): ExportedWallet | null {
     };
 }
 
-export function checkWalletExist(): never | void {
+export function checkWalletExist(readonly: boolean = false): never | void {
     const wallet = Config.getWallet();
     if (!wallet) {
         throw new Error("Create wallet first.");
     }
     if ((wallet as any).decrypt) {
-        ((wallet as any) as PasswordWallet).decryptPrompted();
+        if (readonly) {
+            ((wallet as any) as PasswordWallet).decrypt(1234);
+        } else {
+            ((wallet as any) as PasswordWallet).decryptPrompted();
+        }
     }
 }

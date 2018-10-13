@@ -51,7 +51,7 @@ argParser.addArgument("--memo-is-hex", {
 
 export default class SendCommand implements Command {
     async execute(args: string[]): Promise<any> {
-        checkWalletExist();
+        checkWalletExist(false);
         const wallet = Config.getWallet();
         const parsed = argParser.parseArgs(args);
         const addrs = wallet.listAddresses();

@@ -17,6 +17,10 @@ export default class EncryptedWallet implements Wallet, PasswordWallet {
         this.myWalletData = params;
     }
     toJSON(): SaveData {
+        if (this.key == this.iv || this.iv!.length == 33) {
+            // read-only mode
+            return this.myWalletData!;
+        }
         const { public: publicData, private: privateData } = this.childWallet!.toJSON();
         const privJson = JSON.stringify(privateData);
         const encryptedPriv = aesEncrypt(this.key!, this.iv!, Buffer.from(privJson, "utf8"));
@@ -72,23 +76,35 @@ export default class EncryptedWallet implements Wallet, PasswordWallet {
         this.key = this.makeKey(password);
         this.iv = this.makeIv(password);
     }
-    decrypt(password: string): void {
-        const { public: publicData, type } = this.myWalletData!.public;
-        const encryptedPrivate = Buffer.from(this.myWalletData!.private, "base64");
-        const key = this.key = this.makeKey(password);
-        const iv = this.iv = this.makeIv(password);
-        const decryptedPrivate = JSON.parse(aesDecrypt(key, iv, encryptedPrivate).toString('utf8'));
-        this.childWallet = new (walletTypes[type])();
-        this.childWallet!.load({ public: publicData, private: decryptedPrivate });
+    decrypt(password: string | 1234): void {
+        if (typeof password == 'string') {
+            // decrypt mode
+            const { public: publicData, type } = this.myWalletData!.public;
+            const encryptedPrivate = Buffer.from(this.myWalletData!.private, "base64");
+            const key = this.key = this.makeKey(password);
+            const iv = this.iv = this.makeIv(password);
+            const decryptedPrivate = JSON.parse(aesDecrypt(key, iv, encryptedPrivate).toString('utf8'));
+            this.childWallet = new (walletTypes[type])();
+            this.childWallet!.load({ public: publicData, private: decryptedPrivate });
+        } else {
+            // flag with illegal data to notify that it's read-only
+            this.key = this.iv = Buffer.alloc(33, 0);
+            const { public: publicData, type } = this.myWalletData!.public;
+            this.childWallet = new (walletTypes[type])();
+            this.childWallet!.load({ public: publicData, private: null });
+        }
     }
     decryptPrompted(): void {
         while (true) {
-            const pw = question("Type password to decrypt: ", {
+            const pw = question("Type password to decrypt (Leave blank to public-only) : ", {
                 hideEchoBack: true,
                 mask: "*"
             })
             try {
-                this.decrypt(pw);
+                if (pw)
+                    this.decrypt(pw);
+                else
+                    this.decrypt(1234);
                 break;
             } catch (error) {
                 console.log("Wallet decryption failed.");

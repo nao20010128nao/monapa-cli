@@ -42,9 +42,10 @@ export default class PrivKeyWallet implements Wallet {
         return Object.keys(this.keys);
     }
     load(params: { public: any, private: any }): void {
+        const privData = params.private || {};
         for (let key in params.public) {
             const pub = params.public[key];
-            const priv = params.private[key];
+            const priv = privData[key];
             let pair: ECPair | null = null;
             if (typeof priv === "string") {
                 pair = ECPair.fromWIF(priv, monacoin);

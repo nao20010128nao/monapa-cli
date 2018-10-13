@@ -17,7 +17,7 @@ export interface PasswordWallet {
     // save entropy to memory and encrypt when serialize
     encrypt(password: string): void;
     // decrypt private and call load() with public data
-    decrypt(password: string): void;
+    decrypt(password: string | 1234): void;
     decryptPrompted(): void;
     setChildWallet(wallet: Wallet): void;
 }

@@ -20,7 +20,7 @@ argParser.addArgument("--satoshis", {
 
 export default class GetBalanceCommand implements Command {
     async execute(args: string[]): Promise<any> {
-        checkWalletExist();
+        checkWalletExist(true);
         const parsed = argParser.parseArgs(args);
         const addrs = Config.getWallet().listAddresses();
         const tokens: TokenAddrMap = {};
