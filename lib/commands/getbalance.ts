@@ -8,12 +8,14 @@ import { toBoolean } from "../misc/conv";
 
 const argParser = new ArgumentParser({
     description: "Get balance",
-    addHelp: false
+    addHelp: true,
+    prog: "monapa getbalance"
 });
 argParser.addArgument("--satoshis", {
     required: false,
     type: toBoolean,
-    defaultValue: false
+    defaultValue: false,
+    help: "Display amounts in satoshis"
 });
 
 export default class GetBalanceCommand implements Command {

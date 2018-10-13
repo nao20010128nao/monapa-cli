@@ -5,7 +5,8 @@ import { ArgumentParser } from "argparse";
 
 const argParser = new ArgumentParser({
     description: "Help",
-    addHelp: false
+    addHelp: false,
+    prog: "monapa help"
 });
 argParser.addArgument("--version", {
     defaultValue: true,

@@ -8,7 +8,8 @@ import Config from "../config";
 const walletIds = Object.keys(WalletTypes).filter(x => x !== "encrypted");
 const argParser = new ArgumentParser({
     description: "Makes a wallet",
-    addHelp: false
+    addHelp: false,
+    prog: "monapa makewallet"
 });
 argParser.addArgument("--overwrite", {
     defaultValue: "neutral",

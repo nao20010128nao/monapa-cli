@@ -10,24 +10,30 @@ import { keyInYN } from "readline-sync";
 
 const argParser = new ArgumentParser({
     description: "Send",
-    addHelp: false
+    addHelp: false,
+    prog: "monapa send"
 });
 // follow @monapachan's rule
 argParser.addArgument("dest", {
+    help: "Destination address"
 });
 argParser.addArgument("amount", {
-    type: toBigNumber
+    type: toBigNumber,
+    help: "Amount to send in floating point"
 });
 argParser.addArgument("tokenName", {
+    help: "Token name to send"
 });
 
 argParser.addArgument("--from", {
-    required: false
+    required: false,
+    help: "Address to send from"
 });
 argParser.addArgument("--feerate", {
     required: false,
     type: toInteger,
-    defaultValue: 10 // 10 wat/bytes
+    defaultValue: 10, // 10 wat/bytes
+    help: "Fee rate"
 });
 argParser.addArgument("--memo", {
     required: false
