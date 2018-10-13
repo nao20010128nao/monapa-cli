@@ -18,4 +18,6 @@ export interface PasswordWallet {
     encrypt(password: string): void;
     // decrypt private and call load() with public data
     decrypt(password: string): void;
+    decryptPrompted(): void;
+    setChildWallet(wallet: Wallet): void;
 }

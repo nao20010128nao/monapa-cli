@@ -1,11 +1,13 @@
-import Wallet from "../component/wallet";
+import Wallet, { PasswordWallet } from "../component/wallet";
 import PubKeyWallet from "../wallet/pubkeywallet";
 import PrivKeyWallet from "../wallet/privkeywallet";
+import EncryptedWallet from "../wallet/encryptedwallet";
 import Config from "../config";
 
 export const types: any = {
     pubkey: PubKeyWallet,
-    privkey: PrivKeyWallet
+    privkey: PrivKeyWallet,
+    encrypted: EncryptedWallet
 };
 
 export type SaveData = { public: any, private: any };
@@ -40,7 +42,11 @@ export function serializeWallet(wallet: Wallet | null): ExportedWallet | null {
 }
 
 export function checkWalletExist(): never | void {
-    if (!Config.getWallet()) {
+    const wallet = Config.getWallet();
+    if (!wallet) {
         throw new Error("Create wallet first.");
+    }
+    if ((wallet as any).decrypt) {
+        ((wallet as any) as PasswordWallet).decryptPrompted();
     }
 }

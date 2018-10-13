@@ -14,3 +14,5 @@ export interface TypedObject<V> {
 export type TokenAddrMap = TypedObject<TokenEntry[]>
 
 export type PromiseOrNot<T> = T | Promise<T>;
+
+export type DataLike = string | Buffer | NodeJS.TypedArray | DataView;
