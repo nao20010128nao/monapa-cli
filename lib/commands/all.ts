@@ -7,6 +7,7 @@ import Send from "./send";
 import SendTx from "./sendtx";
 import AddressInfo from "./addressinfo";
 import ListMyAddress from "./listmyaddress";
+import TokenInfo from "./tokeninfo";
 
 interface CommandMap {
     [key: string]: Command;
@@ -21,5 +22,6 @@ map.send = new Send();
 map.sendtx = new SendTx();
 map.addressinfo = new AddressInfo();
 map.listmyaddress = new ListMyAddress();
+map.tokeninfo = new TokenInfo();
 
 export default map;
