@@ -1,7 +1,6 @@
 import Command from "../component/command";
 import { ArgumentParser } from "argparse";
 import api from "../cp-client";
-import { TokenEntry } from "../misc/extratypes";
 import { ECPair, TransactionBuilder, Transaction } from "bitcoinjs-lib";
 import monacoin from "../misc/network";
 import { keyInYN } from "readline-sync";

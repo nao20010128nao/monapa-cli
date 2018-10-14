@@ -23,6 +23,10 @@ export interface TypedObject<V> {
     [key: string]: V;
 }
 
+export interface TypedNumberObject<V> {
+    [key: number]: V;
+}
+
 export type TokenAddrMap = TypedObject<TokenEntry[]>
 
 export type PromiseOrNot<T> = T | Promise<T>;

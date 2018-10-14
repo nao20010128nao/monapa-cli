@@ -150,15 +150,15 @@ export default class SendCommand implements Command {
         if (Object.keys(signed).length != 0) {
             transactionsAsked = true;
             switch (keyInSelect(["Broadcast now", "Display rawtx"], `There is ${Object.keys(signed).length} signed transactions.`)) {
-                case 1:
+                case 0:
                     // broadcast
                     // avoid errors for Object.values, because it doesn't exist on @types/node
                     await commands.sendtx.execute(eval('Object.values')(signed));
                     break;
-                case 2:
+                case 1:
                     // display
-                    for (let address in unsigned) {
-                        console.log(`${address}: ${unsigned[address].toString('hex')}`);
+                    for (let address in signed) {
+                        console.log(`${address}: ${signed[address]}`);
                     }
                     break;
             }
