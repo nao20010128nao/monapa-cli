@@ -7,12 +7,12 @@ export default class SendTxCommand implements Command {
             console.log("usage: monapa sendtx [RAWTX] [RAWTX] ...");
             return;
         }
-        for (let data of args.map(rawtx => { rawtx })) {
+        for (let data of args.map(rawtx => ({ rawtx }))) {
             try {
-                const txid = await api.cmdLib("/tx/send", data);
+                const txid = (await api.cmdExplore("/tx/send", data)).txid;
                 console.log(txid);
             } catch (e) {
-                console.error(e);
+                console.error(e.response.data);
             }
         }
     }

@@ -8,7 +8,7 @@ const monacoin: Network = {
     },
     pubKeyHash: 50,
     scriptHash: 55,
-    wif: 178,
+    wif: 176,
     bech32: "mona"
 };
 

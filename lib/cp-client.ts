@@ -40,10 +40,11 @@ export default {
         }
         return r.data.result;
     },
-    cmdExplore: async (dir: string, params: any) => {
-        const r = await axios(insights[insightPos = (insightPos++ % insights.length)], {
-            params
-        });
+    cmdExplore: async (dir: string, params?: any) => {
+        const r = await (params ?
+            axios.post(`${insights[insightPos = (insightPos++ % insights.length)]}${dir}`, params) :
+            axios.get(`${insights[insightPos = (insightPos++ % insights.length)]}${dir}`)
+        );
         if (r.data.error && r.data.error.code) {
             throw r.data.error.data;
         }

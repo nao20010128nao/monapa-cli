@@ -35,7 +35,7 @@ argParser.addArgument("--from", {
 argParser.addArgument("--feerate", {
     required: false,
     type: toInteger,
-    defaultValue: 1000, // 10 wat/kb
+    defaultValue: 10000, // 10 wat/kb
     help: "Fee rate (wat/kb)"
 });
 argParser.addArgument("--memo", {
@@ -109,7 +109,7 @@ export default class SendCommand implements Command {
             console.log("Cancelled");
             return 0;
         }
-        let signed: TypedObject<Buffer> = {};
+        let signed: TypedObject<string> = {};
         let unsigned: TypedObject<Buffer> = {};
         for (let { address, amount } of planned) {
             const memoAdditional = parsed.memo ? {
@@ -142,7 +142,7 @@ export default class SendCommand implements Command {
                 const txb = TransactionBuilder.fromTransaction(Transaction.fromBuffer(utb), monacoin);
                 for (let i = 0; i < txb.inputs.length; i++)
                     txb.sign(i, kp);
-                const txData = txb.build().toBuffer();
+                const txData = txb.build().toHex();
                 signed[address] = txData;
             }
         }

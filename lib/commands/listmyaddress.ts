@@ -2,7 +2,7 @@ import Command from "../component/command";
 import { checkWalletExist } from "../misc/wallethelper";
 import Config from "../config";
 
-export default class VersionCommand implements Command {
+export default class ListMyAddressCommand implements Command {
     execute(args: string[]): void {
         checkWalletExist(true);
         const wallet = Config.getWallet();

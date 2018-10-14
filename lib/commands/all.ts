@@ -8,6 +8,8 @@ import SendTx from "./sendtx";
 import AddressInfo from "./addressinfo";
 import ListMyAddress from "./listmyaddress";
 import TokenInfo from "./tokeninfo";
+import SweepToken from "./sweeptoken";
+import SweepMona from "./sweepmona";
 
 interface CommandMap {
     [key: string]: Command;
@@ -23,5 +25,7 @@ map.sendtx = new SendTx();
 map.addressinfo = new AddressInfo();
 map.listmyaddress = new ListMyAddress();
 map.tokeninfo = new TokenInfo();
+map.sweeptoken = new SweepToken();
+map.sweepmona = new SweepMona();
 
 export default map;

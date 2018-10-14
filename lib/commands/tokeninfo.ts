@@ -4,6 +4,10 @@ import { TokenInfoEntry } from "../misc/extratypes";
 
 export default class TokenInfoCommand implements Command {
     async execute(args: string[]): Promise<void> {
+        if (args.length == 0) {
+            console.log("usage: monapa tokeninfo [TOKEN] [TOKEN] ...");
+            return;
+        }
         for (const token of args) {
             console.log(`${token}: `);
             try {

@@ -1,4 +1,3 @@
-declare function require(s: string): any;
 import Command from "../component/command";
 
 export default class VersionCommand implements Command {
