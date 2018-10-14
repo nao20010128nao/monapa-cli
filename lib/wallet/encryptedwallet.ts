@@ -17,7 +17,7 @@ export default class EncryptedWallet implements Wallet, PasswordWallet {
         this.myWalletData = params;
     }
     toJSON(): SaveData {
-        if (this.key == this.iv || this.iv!.length == 33) {
+        if (this.readonly()) {
             // read-only mode
             return this.myWalletData!;
         }
@@ -34,7 +34,9 @@ export default class EncryptedWallet implements Wallet, PasswordWallet {
         return this.childWallet!.getPair(address);
     }
     addAddress(pair: ECPair): void {
-        return this.childWallet!.addAddress(pair);
+        if (!this.readonly()) {
+            this.childWallet!.addAddress(pair);
+        }
     }
     listAddresses(): string[] {
         return this.childWallet!.listAddresses();
@@ -56,6 +58,10 @@ export default class EncryptedWallet implements Wallet, PasswordWallet {
             this.encrypt(pass);
             break;
         }
+    }
+
+    private readonly(): boolean {
+        return this.key == this.iv || this.iv!.length == 33;
     }
 
     private makeKey(password: string): Buffer {

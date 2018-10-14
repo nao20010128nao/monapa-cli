@@ -6,7 +6,8 @@
   "scripts": {
     "prepublish": "npm run build",
     "build": "tsc || echo WTF!?",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "exec": "npm run build ; node ./dist/index.js"
   },
   "bin": "./dist/index.js",
   "keywords": [],

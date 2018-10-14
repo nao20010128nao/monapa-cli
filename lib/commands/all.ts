@@ -5,6 +5,8 @@ import MakeWallet from "./makewallet";
 import GetBalance from "./getbalance";
 import Send from "./send";
 import SendTx from "./sendtx";
+import AddressInfo from "./addressinfo";
+import ListMyAddress from "./listmyaddress";
 
 interface CommandMap {
     [key: string]: Command;
@@ -17,5 +19,7 @@ map.makewallet = new MakeWallet();
 map.getbalance = new GetBalance();
 map.send = new Send();
 map.sendtx = new SendTx();
+map.addressinfo = new AddressInfo();
+map.listmyaddress = new ListMyAddress();
 
 export default map;
