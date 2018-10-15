@@ -9,7 +9,7 @@ import { toBoolean } from "../misc/conv";
 const argParser = new ArgumentParser({
     description: "Get balance",
     addHelp: true,
-    prog: "monapa getbalance"
+    prog: "monapa balancetoken"
 });
 argParser.addArgument("--satoshis", {
     required: false,
@@ -18,7 +18,7 @@ argParser.addArgument("--satoshis", {
     help: "Display amounts in satoshis"
 });
 
-export default class GetBalanceCommand implements Command {
+export default class BalanceTokenCommand implements Command {
     async execute(args: string[]): Promise<any> {
         checkWalletExist(true);
         const parsed = argParser.parseArgs(args);
