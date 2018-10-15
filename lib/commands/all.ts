@@ -2,7 +2,7 @@ import Command from "../component/command";
 import Help from "./help";
 import Version from "./version";
 import MakeWallet from "./makewallet";
-import BalanceToken from "./getbalance";
+import BalanceToken from "./balancetoken";
 import Send from "./send";
 import SendTx from "./sendtx";
 import AddressInfo from "./addressinfo";
@@ -11,6 +11,7 @@ import TokenInfo from "./tokeninfo";
 import SweepToken from "./sweeptoken";
 import SweepMona from "./sweepmona";
 import SendMona from "./sendmona";
+import BalanceMona from "./balancemona";
 
 interface CommandMap {
     [key: string]: Command;
@@ -29,5 +30,6 @@ map.tokeninfo = new TokenInfo();
 map.sweeptoken = new SweepToken();
 map.sweepmona = new SweepMona();
 map.sendmona = new SendMona();
+map.balancemona = new BalanceMona();
 
 export default map;

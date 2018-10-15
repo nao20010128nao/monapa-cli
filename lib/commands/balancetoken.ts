@@ -52,6 +52,6 @@ export default class BalanceTokenCommand implements Command {
         }
     }
     description(): string {
-        return "Get balance of tokens";
+        return "Gets balance of tokens";
     }
 }
