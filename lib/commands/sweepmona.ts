@@ -10,9 +10,9 @@ import coinSelect from "coinselect/split";
 import commands from "./all";
 
 const argParser = new ArgumentParser({
-    description: "Sweep tokens from a address",
+    description: "Sweep MONA from a address",
     addHelp: true,
-    prog: "monapa sweeptoken"
+    prog: "monapa sweepmona"
 });
 
 argParser.addArgument("privKey", {});
@@ -22,16 +22,6 @@ argParser.addArgument("--feerate", {
     type: toInteger,
     defaultValue: 10000, // 1000 wat/kb
     help: "Fee rate (wat/kb)"
-});
-argParser.addArgument("--memo", {
-    required: false,
-    help: "Memo to attach with"
-});
-argParser.addArgument("--memo-is-hex", {
-    defaultValue: false,
-    required: false,
-    type: toBoolean,
-    help: "Memo is represented in Hex"
 });
 
 export default class SweepMonaCommand implements Command {

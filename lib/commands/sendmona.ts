@@ -14,9 +14,9 @@ import BigNumber from "bignumber.js";
 import { TypedObject, TypedNumberObject } from "../misc/extratypes";
 
 const argParser = new ArgumentParser({
-    description: "Sweep tokens from a address",
+    description: "Sends MONA from the wallet",
     addHelp: true,
-    prog: "monapa sweeptoken"
+    prog: "monapa sendmona"
 });
 
 // follow @tipmona's "tip" rule
