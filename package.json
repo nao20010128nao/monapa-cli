@@ -1,18 +1,22 @@
 {
   "name": "monapa",
-  "version": "0.1.0",
-  "description": "",
-  "main": "./dist/index.js",
+  "version": "0.1.3",
+  "description": "A CLI tool for Monaparty",
+  "main": "./bin/monapa",
   "scripts": {
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "build": "tsc || echo WTF!?",
     "test": "echo \"Error: no test specified\" && exit 1",
     "exec": "npm run build ; node ./dist/index.js"
   },
   "bin": "./dist/index.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["monaparty", "monacoin"],
+  "author": "nao20010128nao",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/nao20010128nao/monapa-cli",
+    "type": "git"
+  },
   "devDependencies": {
     "@types/argparse": "^1.0.35",
     "@types/bitcoinjs-lib": "^3.4.0",
