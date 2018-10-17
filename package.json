@@ -1,10 +1,10 @@
 {
   "name": "monapa",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A CLI tool for Monaparty",
   "main": "./dist/index.js",
   "scripts": {
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "build": "tsc || echo WTF!?",
     "test": "echo \"Error: no test specified\" && exit 1",
     "exec": "npm run build ; node ./dist/index.js"
