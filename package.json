@@ -18,7 +18,7 @@
     "type": "git"
   },
   "devDependencies": {
-    "@types/argparse": "1.0.35",
+    "@types/argparse": "2.0.0",
     "@types/bitcoinjs-lib": "3.4.0",
     "@types/node": "10.17.26",
     "@types/readline-sync": "1.4.3",
