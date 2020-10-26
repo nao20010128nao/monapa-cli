@@ -20,7 +20,7 @@
   "devDependencies": {
     "@types/argparse": "2.0.2",
     "@types/bitcoinjs-lib": "3.4.0",
-    "@types/node": "10.17.42",
+    "@types/node": "10.17.43",
     "@types/readline-sync": "1.4.3",
     "typescript": "4.0.3"
   },
